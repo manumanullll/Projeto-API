@@ -5,14 +5,14 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
   nome: {
     type: String,
-    required: [true, 'O campo nome é obrigatório'], // Requisito (f) - Validação
+    required: [true, 'O campo nome é obrigatório'],
   },
   email: {
     type: String,
     required: [true, 'O campo email é obrigatório'],
     unique: true, // Garante que não teremos dois usuários com mesmo email
     lowercase: true, // Salva tudo em minúscula
-    match: [/\S+@\S+\.\S+/, 'Por favor, insira um email válido'], // Requisito (f)
+    match: [/\S+@\S+\.\S+/, 'Por favor, insira um email válido'],
   },
   senha: {
     type: String,
