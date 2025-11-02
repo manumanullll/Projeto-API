@@ -1,20 +1,28 @@
-// Importações
 const express = require('express');
 const dotenv = require('dotenv');
 
-// Configura o dotenv (se necessário, embora seja melhor no index)
+// Importa as rotas de usuário
+const userRoutes = require('./routes/userRoutes.js');
+
+// Configura o dotenv
 dotenv.config();
 
 // Inicia o Express
 const app = express();
 
-// Middlewares
-app.use(express.json()); // ESSENCIAL: Faz o Express entender JSON no body
+// Middleware essencial para o Express entender JSON
+app.use(express.json()); 
 
-// Rota de Teste (a que já temos)
+/*
+ * Definição da Rota Principal (API Prefix)
+ * Todas as rotas definidas em 'userRoutes' serão prefixadas com '/api/v1'
+ */
+app.use('/api/v1', userRoutes);
+
+// Rota de Teste (Raiz)
 app.get('/', (req, res) => {
-  res.json({ message: 'API rodando e estruturada em /src/app.js!' });
+  res.json({ message: 'API rodando e estruturada!' });
 });
 
-// Exporta o 'app' para ser usado em outros arquivos
+// Exporta o 'app'
 module.exports = app;
