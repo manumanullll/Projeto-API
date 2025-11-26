@@ -57,8 +57,11 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-/**
- * Cria e exporta o Modelo 'User' baseado no userSchema.
- * O Mongoose criará uma coleção chamada 'users' (plural) no MongoDB.
- */
+// Adicione esta função no src/models/User.js
+userSchema.methods.toJSON = function () {
+    const user = this.toObject();
+    delete user.senha; // Remove o campo 'senha' do objeto antes de serializar
+    return user;
+};
+
 module.exports = mongoose.model('User', userSchema);

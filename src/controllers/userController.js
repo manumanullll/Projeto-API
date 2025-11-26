@@ -9,16 +9,10 @@ const jwtExpiresIn = process.env.JWT_EXPIRES_IN;
 // Função Auxiliar para criar o JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, jwtSecret, {
-    expiresIn: jwtExpiresIn,
+    expiresIn: jwtExpiresIn, // Usa a variável corretamente lida
   });
 };
-
 // --- 1. CREATE (Registro de Novo Usuário) ---
-
-/**
- * Cria um novo usuário no banco de dados.
- * A senha é criptografada pelo hook pre('save') no modelo User.
- */
 const createUser = async (req, res) => {
   const { nome, email, senha } = req.body;
 
@@ -42,10 +36,6 @@ const createUser = async (req, res) => {
 };
 
 // --- 2. READ (Buscar Usuários) ---
-
-/**
- * Busca e retorna todos os usuários do banco de dados.
- */
 const getAllUsers = async (req, res) => {
   try {
     const usuarios = await User.find();
@@ -58,9 +48,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-/**
- * Busca e retorna um usuário específico pelo seu ID.
- */
 const getUserById = async (req, res) => {
   const { id } = req.params;
 
@@ -82,10 +69,6 @@ const getUserById = async (req, res) => {
 };
 
 // --- 3. UPDATE (Atualizar Usuário) ---
-
-/**
- * Atualiza um usuário existente pelo seu ID.
- */
 const updateUser = async (req, res) => {
   const { id } = req.params;
   const updates = req.body; 
@@ -121,10 +104,6 @@ const updateUser = async (req, res) => {
 };
 
 // --- 4. DELETE (Excluir Usuário) ---
-
-/**
- * Deleta um usuário específico pelo seu ID.
- */
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 

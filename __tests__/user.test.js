@@ -6,13 +6,13 @@ dotenv.config(); // CARREGA O ARQUIVO .env AQUI (CRUCIAL PARA OS TESTES)
 const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../src/app');
-const User = require('../src/models/User'); 
+const User = require('../src/models/User');
 
 // Credenciais de teste
 const TEST_CREDENTIALS = {
-  nome: 'Teste Jest',
-  email: 'teste.jest@api.com',
-  senha: 'password123',
+    nome: 'Teste Jest',
+    email: 'teste.jest@api.com',
+    senha: 'password123',
 };
 
 let testUserId;
@@ -54,7 +54,13 @@ describe('Testes de Autenticação e CRUD (USUÁRIOS)', () => {
     // ==========================================================
     // TESTE 2: LOGIN (AUTH)
     // ==========================================================
+    // No __tests__/user.test.js
+
     it('POST /login - Deve fazer login com sucesso e retornar um token JWT', async () => {
+        // --- 1. Verificação (Opcional, mas útil para debug) ---
+        // Certifique-se de que o usuário criado no Teste 1 existe no banco
+        const userExists = await User.findById(testUserId);
+        expect(userExists).not.toBeNull();
         const response = await request(app)
             .post('/api/v1/login')
             .send({
@@ -62,9 +68,15 @@ describe('Testes de Autenticação e CRUD (USUÁRIOS)', () => {
                 senha: TEST_CREDENTIALS.senha,
             });
 
-        expect(response.statusCode).toBe(200);
+        // --- ADICIONE ISSO PARA VER O ERRO 500 ---
+        if (response.statusCode === 500) {
+            console.log('CORPO DO ERRO 500 NA ROTA DE LOGIN:', response.body);
+        }
+        // ----------------------------------------
+
+        expect(response.statusCode).toBe(200); // Falhando com 500
         expect(response.body).toHaveProperty('token');
-        testUserToken = response.body.token; // Salva o token para testes protegidos
+        testUserToken = response.body.token;
     });
 
     // ==========================================================
@@ -99,12 +111,12 @@ describe('Testes de Autenticação e CRUD (USUÁRIOS)', () => {
     // ==========================================================
     it('GET /usuarios/:id - Deve buscar o usuário pelo ID e retornar 200', async () => {
         const response = await request(app).get(`/api/v1/usuarios/${testUserId}`);
-        
+
         expect(response.statusCode).toBe(200);
         expect(response.body._id).toBe(testUserId);
         expect(response.body.email).toBe(TEST_CREDENTIALS.email);
     });
-    
+
     // ==========================================================
     // TESTE 6: VALIDAÇÃO DE DUPLICIDADE (Requisito f e h)
     // ==========================================================
@@ -134,7 +146,7 @@ describe('Testes de Autenticação e CRUD (USUÁRIOS)', () => {
     // ==========================================================
     it('GET /usuarios/:id - Deve retornar 404 Not Found após exclusão', async () => {
         const response = await request(app).get(`/api/v1/usuarios/${testUserId}`);
-        
+
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe('Usuário não encontrado');
     });
